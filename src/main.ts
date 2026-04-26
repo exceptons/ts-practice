@@ -5,6 +5,13 @@ import {
   getAverageScore,
   practiceUsers,
 } from './exercises/basic-types'
+import {
+  formatLastLogin,
+  getMembersByStatus,
+  getStatusLabel,
+  getWebsiteLabel,
+  teamMembers,
+} from './exercises/optional-union'
 
 type Lesson = {
   title: string
@@ -22,9 +29,9 @@ const lessons: Lesson[] = [
   },
   {
     title: 'Object shapes',
-    focus: 'type aliases and optional fields',
+    focus: 'optional fields and union types',
     minutes: 45,
-    completed: false,
+    completed: true,
   },
   {
     title: 'Async data',
@@ -75,10 +82,29 @@ const renderPracticeUsers = (): string =>
     )
     .join('')
 
+const renderTeamMembers = (): string =>
+  teamMembers
+    .map(
+      (member) => `
+        <li>
+          <span>
+            <strong>${member.name}</strong>
+            <small>${member.role} / ${getWebsiteLabel(member)}</small>
+          </span>
+          <span>
+            <span class="status ${member.status}">${getStatusLabel(member.status)}</span>
+            <small>${formatLastLogin(member.lastLoginAt)}</small>
+          </span>
+        </li>
+      `,
+    )
+    .join('')
+
 const render = (): void => {
   const selectedLesson = lessons[selectedLessonIndex]
   const activeUsers = getActiveUsers(practiceUsers)
   const averageScore = getAverageScore(practiceUsers)
+  const invitedMembers = getMembersByStatus(teamMembers, 'invited')
 
   app.innerHTML = `
     <section class="shell">
@@ -116,6 +142,23 @@ const render = (): void => {
         </div>
         <ul class="user-list">
           ${renderPracticeUsers()}
+        </ul>
+      </section>
+
+      <section class="exercise-panel">
+        <div>
+          <p class="eyebrow">Week 1</p>
+          <h2>Optional & Union Exercise</h2>
+          <p>
+            Member data is typed in <code>src/exercises/optional-union.ts</code>.
+          </p>
+        </div>
+        <div class="exercise-stats">
+          <span>${invitedMembers.length} invited member</span>
+          <span>${teamMembers.length} total members</span>
+        </div>
+        <ul class="user-list member-list">
+          ${renderTeamMembers()}
         </ul>
       </section>
     </section>

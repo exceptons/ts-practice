@@ -160,6 +160,21 @@ dd {
   color: #876012;
 }
 
+.status.active {
+  background: #d9f2e7;
+  color: #1f6b4d;
+}
+
+.status.invited {
+  background: #dfe9ff;
+  color: #2d5598;
+}
+
+.status.suspended {
+  background: #ffe0d6;
+  color: #9b3b20;
+}
+
 .exercise-panel {
   grid-column: 1 / -1;
   display: grid;
@@ -242,6 +257,12 @@ code {
   color: #1f6b4d;
   font-weight: 900;
   text-align: right;
+}
+
+.member-list li > span:last-child {
+  display: grid;
+  justify-items: end;
+  gap: 5px;
 }
 
 @media (max-width: 780px) {
