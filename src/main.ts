@@ -13,6 +13,12 @@ import {
   teamMembers,
 } from './exercises/optional-union'
 import { parseSamplePayloads } from './exercises/narrowing-unknown'
+import {
+  fetchOrders,
+  formatOrderStatus,
+  getOrderTotal,
+  type Order,
+} from './exercises/async-api'
 
 type Lesson = {
   title: string
@@ -20,6 +26,19 @@ type Lesson = {
   minutes: number
   completed: boolean
 }
+
+type AsyncState<T> =
+  | {
+      status: 'loading'
+    }
+  | {
+      status: 'success'
+      data: T
+    }
+  | {
+      status: 'error'
+      message: string
+    }
 
 const lessons: Lesson[] = [
   {
@@ -35,8 +54,14 @@ const lessons: Lesson[] = [
     completed: true,
   },
   {
-    title: 'Async data',
+    title: 'Unknown data',
     focus: 'unknown values and narrowing',
+    minutes: 60,
+    completed: true,
+  },
+  {
+    title: 'Async API',
+    focus: 'Promise, async/await, typed responses',
     minutes: 60,
     completed: true,
   },
@@ -50,6 +75,9 @@ if (!app) {
 
 const completedCount = lessons.filter((lesson) => lesson.completed).length
 let selectedLessonIndex = 0
+let orderState: AsyncState<Order[]> = {
+  status: 'loading',
+}
 
 const renderLessonList = (items: Lesson[]): string =>
   items
@@ -127,6 +155,48 @@ const renderParseResults = (): string =>
       `,
     )
     .join('')
+
+const renderOrderRows = (orders: Order[]): string =>
+  orders
+    .map(
+      (order) => `
+        <li>
+          <span>
+            <strong>#${order.id} ${order.customerName}</strong>
+            <small>${order.total.toLocaleString()} yen</small>
+          </span>
+          <span class="status ${order.status}">${formatOrderStatus(order.status)}</span>
+        </li>
+      `,
+    )
+    .join('')
+
+const renderOrders = (state: AsyncState<Order[]>): string => {
+  switch (state.status) {
+    case 'loading':
+      return `
+        <div class="loading-row">
+          Loading orders...
+        </div>
+      `
+    case 'error':
+      return `
+        <div class="loading-row error-row">
+          ${state.message}
+        </div>
+      `
+    case 'success':
+      return `
+        <div class="exercise-stats">
+          <span>${state.data.length} loaded orders</span>
+          <span>${getOrderTotal(state.data).toLocaleString()} yen total</span>
+        </div>
+        <ul class="user-list member-list">
+          ${renderOrderRows(state.data)}
+        </ul>
+      `
+  }
+}
 
 const render = (): void => {
   const selectedLesson = lessons[selectedLessonIndex]
@@ -208,6 +278,17 @@ const render = (): void => {
           ${renderParseResults()}
         </ul>
       </section>
+
+      <section class="exercise-panel">
+        <div>
+          <p class="eyebrow">Week 1</p>
+          <h2>Async API Exercise</h2>
+          <p>
+            Order data is loaded with <code>src/exercises/async-api.ts</code>.
+          </p>
+        </div>
+        ${renderOrders(orderState)}
+      </section>
     </section>
   `
 
@@ -223,4 +304,25 @@ const render = (): void => {
   })
 }
 
+const loadOrders = async (): Promise<void> => {
+  orderState = {
+    status: 'loading',
+  }
+  render()
+
+  const response = await fetchOrders()
+
+  orderState = response.ok
+    ? {
+        status: 'success',
+        data: response.data,
+      }
+    : {
+        status: 'error',
+        message: response.error,
+      }
+  render()
+}
+
 render()
+void loadOrders()

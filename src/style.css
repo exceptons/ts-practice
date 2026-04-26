@@ -175,6 +175,21 @@ dd {
   color: #9b3b20;
 }
 
+.status.draft {
+  background: #fff0cf;
+  color: #876012;
+}
+
+.status.paid {
+  background: #d9f2e7;
+  color: #1f6b4d;
+}
+
+.status.shipped {
+  background: #dfe9ff;
+  color: #2d5598;
+}
+
 .exercise-panel {
   grid-column: 1 / -1;
   display: grid;
@@ -263,6 +278,22 @@ code {
   display: grid;
   justify-items: end;
   gap: 5px;
+}
+
+.loading-row {
+  grid-column: 1 / -1;
+  min-height: 68px;
+  padding: 18px;
+  border: 1px solid #dce3e8;
+  border-radius: 8px;
+  background: #fbfcfc;
+  color: #52616d;
+  font-weight: 800;
+}
+
+.error-row {
+  background: #fff6f3;
+  color: #9b3b20;
 }
 
 @media (max-width: 780px) {
