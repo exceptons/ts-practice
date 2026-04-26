@@ -1,4 +1,10 @@
 import './style.css'
+import {
+  createUserLabel,
+  getActiveUsers,
+  getAverageScore,
+  practiceUsers,
+} from './exercises/basic-types'
 
 type Lesson = {
   title: string
@@ -54,8 +60,25 @@ const renderLessonList = (items: Lesson[]): string =>
     )
     .join('')
 
+const renderPracticeUsers = (): string =>
+  practiceUsers
+    .map(
+      (user) => `
+        <li>
+          <span>
+            <strong>${user.name}</strong>
+            <small>${createUserLabel(user)}</small>
+          </span>
+          <span class="score">${user.score}</span>
+        </li>
+      `,
+    )
+    .join('')
+
 const render = (): void => {
   const selectedLesson = lessons[selectedLessonIndex]
+  const activeUsers = getActiveUsers(practiceUsers)
+  const averageScore = getAverageScore(practiceUsers)
 
   app.innerHTML = `
     <section class="shell">
@@ -78,6 +101,23 @@ const render = (): void => {
       <div class="lesson-list" aria-label="Lessons">
         ${renderLessonList(lessons)}
       </div>
+
+      <section class="exercise-panel">
+        <div>
+          <p class="eyebrow">Week 1</p>
+          <h2>Basic Types Exercise</h2>
+          <p>
+            User data is typed in <code>src/exercises/basic-types.ts</code>.
+          </p>
+        </div>
+        <div class="exercise-stats">
+          <span>${activeUsers.length} active users</span>
+          <span>${averageScore} average score</span>
+        </div>
+        <ul class="user-list">
+          ${renderPracticeUsers()}
+        </ul>
+      </section>
     </section>
   `
 
