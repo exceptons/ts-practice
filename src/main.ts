@@ -12,6 +12,7 @@ import {
   getWebsiteLabel,
   teamMembers,
 } from './exercises/optional-union'
+import { parseSamplePayloads } from './exercises/narrowing-unknown'
 
 type Lesson = {
   title: string
@@ -35,9 +36,9 @@ const lessons: Lesson[] = [
   },
   {
     title: 'Async data',
-    focus: 'Promise results and API response types',
+    focus: 'unknown values and narrowing',
     minutes: 60,
-    completed: false,
+    completed: true,
   },
 ]
 
@@ -100,11 +101,40 @@ const renderTeamMembers = (): string =>
     )
     .join('')
 
+const renderParseResults = (): string =>
+  parseSamplePayloads()
+    .map(
+      (result) => `
+        <li>
+          ${
+            result.ok
+              ? `
+                <span>
+                  <strong>${result.user.name}</strong>
+                  <small>${result.user.email}</small>
+                </span>
+                <span class="status done">Parsed</span>
+              `
+              : `
+                <span>
+                  <strong>Invalid payload</strong>
+                  <small>${result.error}</small>
+                </span>
+                <span class="status suspended">Rejected</span>
+              `
+          }
+        </li>
+      `,
+    )
+    .join('')
+
 const render = (): void => {
   const selectedLesson = lessons[selectedLessonIndex]
   const activeUsers = getActiveUsers(practiceUsers)
   const averageScore = getAverageScore(practiceUsers)
   const invitedMembers = getMembersByStatus(teamMembers, 'invited')
+  const parseResults = parseSamplePayloads()
+  const validPayloads = parseResults.filter((result) => result.ok)
 
   app.innerHTML = `
     <section class="shell">
@@ -159,6 +189,23 @@ const render = (): void => {
         </div>
         <ul class="user-list member-list">
           ${renderTeamMembers()}
+        </ul>
+      </section>
+
+      <section class="exercise-panel">
+        <div>
+          <p class="eyebrow">Week 1</p>
+          <h2>Narrowing & Unknown Exercise</h2>
+          <p>
+            API-like payloads are checked in <code>src/exercises/narrowing-unknown.ts</code>.
+          </p>
+        </div>
+        <div class="exercise-stats">
+          <span>${validPayloads.length} valid payload</span>
+          <span>${parseResults.length} checked payloads</span>
+        </div>
+        <ul class="user-list member-list">
+          ${renderParseResults()}
         </ul>
       </section>
     </section>
