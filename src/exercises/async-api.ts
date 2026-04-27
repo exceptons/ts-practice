@@ -1,5 +1,7 @@
 export type OrderStatus = 'draft' | 'paid' | 'shipped'
 
+export type OrderLoadMode = 'success' | 'api-error' | 'network-error'
+
 export type Order = {
   id: number
   customerName: string
@@ -50,6 +52,36 @@ export const fetchOrders = async (): Promise<ApiResponse<Order[]>> => {
     ok: true,
     data: orders,
   }
+}
+
+export const fetchOrdersByMode = async (
+  mode: OrderLoadMode,
+): Promise<ApiResponse<Order[]>> => {
+  await wait(300)
+
+  if (mode === 'api-error') {
+    return {
+      ok: false,
+      error: 'The order API returned an error response.',
+    }
+  }
+
+  if (mode === 'network-error') {
+    throw new Error('Network connection failed while loading orders.')
+  }
+
+  return {
+    ok: true,
+    data: orders,
+  }
+}
+
+export const getErrorMessage = (error: unknown): string => {
+  if (error instanceof Error) {
+    return error.message
+  }
+
+  return 'Unknown error occurred.'
 }
 
 export const getOrderTotal = (items: Order[]): number =>

@@ -14,10 +14,12 @@ import {
 } from './exercises/optional-union'
 import { parseSamplePayloads } from './exercises/narrowing-unknown'
 import {
-  fetchOrders,
+  fetchOrdersByMode,
   formatOrderStatus,
+  getErrorMessage,
   getOrderTotal,
   type Order,
+  type OrderLoadMode,
 } from './exercises/async-api'
 
 type Lesson = {
@@ -78,6 +80,7 @@ let selectedLessonIndex = 0
 let orderState: AsyncState<Order[]> = {
   status: 'loading',
 }
+let orderLoadMode: OrderLoadMode = 'success'
 
 const renderLessonList = (items: Lesson[]): string =>
   items
@@ -198,6 +201,40 @@ const renderOrders = (state: AsyncState<Order[]>): string => {
   }
 }
 
+const renderOrderModeButtons = (): string => {
+  const modes: Array<{
+    label: string
+    mode: OrderLoadMode
+  }> = [
+    {
+      label: 'Success',
+      mode: 'success',
+    },
+    {
+      label: 'API error',
+      mode: 'api-error',
+    },
+    {
+      label: 'Network error',
+      mode: 'network-error',
+    },
+  ]
+
+  return modes
+    .map(
+      (item) => `
+        <button
+          class="mode-button ${item.mode === orderLoadMode ? 'active' : ''}"
+          data-order-mode="${item.mode}"
+          type="button"
+        >
+          ${item.label}
+        </button>
+      `,
+    )
+    .join('')
+}
+
 const render = (): void => {
   const selectedLesson = lessons[selectedLessonIndex]
   const activeUsers = getActiveUsers(practiceUsers)
@@ -287,6 +324,9 @@ const render = (): void => {
             Order data is loaded with <code>src/exercises/async-api.ts</code>.
           </p>
         </div>
+        <div class="mode-controls" aria-label="Order loading mode">
+          ${renderOrderModeButtons()}
+        </div>
         ${renderOrders(orderState)}
       </section>
     </section>
@@ -302,6 +342,17 @@ const render = (): void => {
       }
     })
   })
+
+  document.querySelectorAll<HTMLButtonElement>('.mode-button').forEach((button) => {
+    button.addEventListener('click', () => {
+      const mode = button.dataset.orderMode
+
+      if (mode === 'success' || mode === 'api-error' || mode === 'network-error') {
+        orderLoadMode = mode
+        void loadOrders()
+      }
+    })
+  })
 }
 
 const loadOrders = async (): Promise<void> => {
@@ -310,17 +361,24 @@ const loadOrders = async (): Promise<void> => {
   }
   render()
 
-  const response = await fetchOrders()
+  try {
+    const response = await fetchOrdersByMode(orderLoadMode)
 
-  orderState = response.ok
-    ? {
-        status: 'success',
-        data: response.data,
-      }
-    : {
-        status: 'error',
-        message: response.error,
-      }
+    orderState = response.ok
+      ? {
+          status: 'success',
+          data: response.data,
+        }
+      : {
+          status: 'error',
+          message: response.error,
+        }
+  } catch (error) {
+    orderState = {
+      status: 'error',
+      message: getErrorMessage(error),
+    }
+  }
   render()
 }
 

@@ -235,6 +235,34 @@ code {
   font-weight: 800;
 }
 
+.mode-controls {
+  display: flex;
+  align-items: start;
+  justify-content: end;
+  gap: 8px;
+}
+
+.mode-button {
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid #cbd6dc;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #40505c;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.mode-button:hover,
+.mode-button:focus-visible,
+.mode-button.active {
+  border-color: #2d6f68;
+  background: #eef7f4;
+  color: #1f5f59;
+  outline: none;
+}
+
 .user-list {
   grid-column: 1 / -1;
   display: grid;
@@ -318,5 +346,13 @@ code {
   .exercise-panel {
     grid-template-columns: 1fr;
     padding: 22px;
+  }
+
+  .mode-controls {
+    justify-content: stretch;
+  }
+
+  .mode-button {
+    flex: 1 1 0;
   }
 }
