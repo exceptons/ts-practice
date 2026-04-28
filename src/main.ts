@@ -21,6 +21,13 @@ import {
   type Order,
   type OrderLoadMode,
 } from './exercises/async-api'
+import {
+  initialSignupForm,
+  parseSignupForm,
+  validateSignupForm,
+  type SignupForm,
+  type ValidationResult,
+} from './exercises/form-validation'
 
 type Lesson = {
   title: string
@@ -67,6 +74,12 @@ const lessons: Lesson[] = [
     minutes: 60,
     completed: true,
   },
+  {
+    title: 'Typed forms',
+    focus: 'FormData parsing and validation results',
+    minutes: 45,
+    completed: true,
+  },
 ]
 
 const app = document.querySelector<HTMLDivElement>('#app')
@@ -81,6 +94,26 @@ let orderState: AsyncState<Order[]> = {
   status: 'loading',
 }
 let orderLoadMode: OrderLoadMode = 'success'
+let signupFormValue: SignupForm = initialSignupForm
+let signupResult: ValidationResult<SignupForm> | null = null
+
+const escapeHtml = (value: string): string =>
+  value.replace(/[&<>"']/g, (character) => {
+    switch (character) {
+      case '&':
+        return '&amp;'
+      case '<':
+        return '&lt;'
+      case '>':
+        return '&gt;'
+      case '"':
+        return '&quot;'
+      case "'":
+        return '&#039;'
+      default:
+        return character
+    }
+  })
 
 const renderLessonList = (items: Lesson[]): string =>
   items
@@ -235,6 +268,99 @@ const renderOrderModeButtons = (): string => {
     .join('')
 }
 
+const renderSignupResult = (
+  result: ValidationResult<SignupForm> | null,
+): string => {
+  if (!result) {
+    return `
+      <div class="loading-row">
+        Submit the form to validate typed input.
+      </div>
+    `
+  }
+
+  if (result.ok) {
+    return `
+      <ul class="user-list member-list">
+        <li>
+          <span>
+            <strong>${escapeHtml(result.value.name)}</strong>
+            <small>${escapeHtml(result.value.email)}</small>
+          </span>
+          <span class="status done">Valid</span>
+        </li>
+        <li>
+          <span>
+            <strong>${result.value.age ?? 0} years old</strong>
+            <small>${result.value.contactMethod}</small>
+          </span>
+          <span class="status active">Ready</span>
+        </li>
+      </ul>
+    `
+  }
+
+  return `
+    <ul class="user-list member-list">
+      ${result.errors
+        .map(
+          (error) => `
+            <li>
+              <span>
+                <strong>${error.field}</strong>
+                <small>${error.message}</small>
+              </span>
+              <span class="status suspended">Invalid</span>
+            </li>
+          `,
+        )
+        .join('')}
+    </ul>
+  `
+}
+
+const renderSignupForm = (): string => `
+  <form class="signup-form" id="signup-form">
+    <label>
+      <span>Name</span>
+      <input name="name" type="text" value="${escapeHtml(signupFormValue.name)}" />
+    </label>
+    <label>
+      <span>Email</span>
+      <input name="email" type="email" value="${escapeHtml(signupFormValue.email)}" />
+    </label>
+    <label>
+      <span>Age</span>
+      <input
+        name="age"
+        type="number"
+        min="0"
+        value="${signupFormValue.age ?? ''}"
+      />
+    </label>
+    <label>
+      <span>Contact</span>
+      <select name="contactMethod">
+        <option value="email" ${signupFormValue.contactMethod === 'email' ? 'selected' : ''}>
+          Email
+        </option>
+        <option value="none" ${signupFormValue.contactMethod === 'none' ? 'selected' : ''}>
+          None
+        </option>
+      </select>
+    </label>
+    <label class="checkbox-row">
+      <input
+        name="acceptsTerms"
+        type="checkbox"
+        ${signupFormValue.acceptsTerms ? 'checked' : ''}
+      />
+      <span>Accept terms</span>
+    </label>
+    <button class="mode-button" type="submit">Validate</button>
+  </form>
+`
+
 const render = (): void => {
   const selectedLesson = lessons[selectedLessonIndex]
   const activeUsers = getActiveUsers(practiceUsers)
@@ -329,6 +455,18 @@ const render = (): void => {
         </div>
         ${renderOrders(orderState)}
       </section>
+
+      <section class="exercise-panel">
+        <div>
+          <p class="eyebrow">Week 2</p>
+          <h2>Typed Form Exercise</h2>
+          <p>
+            Submitted values are parsed in <code>src/exercises/form-validation.ts</code>.
+          </p>
+        </div>
+        ${renderSignupForm()}
+        ${renderSignupResult(signupResult)}
+      </section>
     </section>
   `
 
@@ -352,6 +490,17 @@ const render = (): void => {
         void loadOrders()
       }
     })
+  })
+
+  const signupForm = document.querySelector<HTMLFormElement>('#signup-form')
+
+  signupForm?.addEventListener('submit', (event) => {
+    event.preventDefault()
+
+    const formData = new FormData(signupForm)
+    signupFormValue = parseSignupForm(formData)
+    signupResult = validateSignupForm(signupFormValue)
+    render()
   })
 }
 
