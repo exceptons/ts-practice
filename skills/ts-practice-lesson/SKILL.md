@@ -26,6 +26,7 @@ Do not force a fixed UI or file pattern. The goal is to add one focused, verifia
 
 3. After designing the learning theme and commit scope, write an understanding-check Markdown file.
    - Prefer `learning-checks/{topic}.md`.
+   - Write the understanding-check Markdown in Japanese.
    - Keep it focused on the planned lesson, with 6-12 questions.
    - Do not include answers by default; let the learner answer first.
    - Include it in the same commit as the lesson unless the user asks to keep it local.
