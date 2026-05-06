@@ -28,6 +28,15 @@ import {
   type SignupForm,
   type ValidationResult,
 } from './exercises/form-validation'
+import {
+  applyProductUpdate,
+  findProductBySku,
+  getCategoryCounts,
+  getProductNames,
+  getPublishedProducts,
+  sampleProducts,
+  type Product,
+} from './exercises/collection-helpers'
 
 type Lesson = {
   title: string
@@ -77,6 +86,12 @@ const lessons: Lesson[] = [
   {
     title: 'Typed forms',
     focus: 'FormData parsing and validation results',
+    minutes: 45,
+    completed: true,
+  },
+  {
+    title: 'Collections',
+    focus: 'map, filter, find, Record, Partial',
     minutes: 45,
     completed: true,
   },
@@ -361,6 +376,54 @@ const renderSignupForm = (): string => `
   </form>
 `
 
+const renderProductRows = (products: Product[]): string =>
+  products
+    .map(
+      (product) => `
+        <li>
+          <span>
+            <strong>${escapeHtml(product.name)}</strong>
+            <small>${product.sku} / ${product.price.toLocaleString()} yen</small>
+          </span>
+          <span class="status ${product.category}">${product.category}</span>
+        </li>
+      `,
+    )
+    .join('')
+
+const renderCategoryCounts = (): string => {
+  const counts = getCategoryCounts(sampleProducts)
+
+  return `
+    <div class="exercise-stats">
+      <span>${counts.book} book</span>
+      <span>${counts.course} course</span>
+      <span>${counts.tool} tool</span>
+    </div>
+  `
+}
+
+const renderProductUpdatePreview = (product: Product | undefined): string => {
+  if (!product) {
+    return `
+      <div class="loading-row error-row">
+        Product was not found.
+      </div>
+    `
+  }
+
+  const updatedProduct = applyProductUpdate(product, {
+    stock: product.stock + 5,
+    isPublished: true,
+  })
+
+  return `
+    <div class="loading-row">
+      ${escapeHtml(updatedProduct.name)} stock preview: ${updatedProduct.stock}
+    </div>
+  `
+}
+
 const render = (): void => {
   const selectedLesson = lessons[selectedLessonIndex]
   const activeUsers = getActiveUsers(practiceUsers)
@@ -368,6 +431,9 @@ const render = (): void => {
   const invitedMembers = getMembersByStatus(teamMembers, 'invited')
   const parseResults = parseSamplePayloads()
   const validPayloads = parseResults.filter((result) => result.ok)
+  const publishedProducts = getPublishedProducts(sampleProducts)
+  const publishedProductNames = getProductNames(publishedProducts)
+  const featuredProduct = findProductBySku(sampleProducts, 'LINT-TOOL')
 
   app.innerHTML = `
     <section class="shell">
@@ -466,6 +532,25 @@ const render = (): void => {
         </div>
         ${renderSignupForm()}
         ${renderSignupResult(signupResult)}
+      </section>
+
+      <section class="exercise-panel">
+        <div>
+          <p class="eyebrow">Week 2</p>
+          <h2>Collection Helpers Exercise</h2>
+          <p>
+            Product lists are handled in <code>src/exercises/collection-helpers.ts</code>.
+          </p>
+        </div>
+        <div class="exercise-stats">
+          <span>${publishedProducts.length} published products</span>
+          <span>${publishedProductNames.length} names mapped</span>
+        </div>
+        <ul class="user-list member-list">
+          ${renderProductRows(publishedProducts)}
+        </ul>
+        ${renderCategoryCounts()}
+        ${renderProductUpdatePreview(featuredProduct)}
       </section>
     </section>
   `
