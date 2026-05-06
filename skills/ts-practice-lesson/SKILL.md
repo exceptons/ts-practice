@@ -25,10 +25,10 @@ Do not force a fixed UI or file pattern. The goal is to add one focused, verifia
    - Avoid mixing unrelated TypeScript concepts in one commit.
 
 3. After designing the learning theme and commit scope, write an understanding-check Markdown file.
-   - Prefer `docs/understanding-checks/{topic}.md`.
+   - Prefer `learning-checks/{topic}.md`.
    - Keep it focused on the planned lesson, with 6-12 questions.
    - Do not include answers by default; let the learner answer first.
-   - Keep it out of the commit unless the user explicitly asks to track it. `docs/` is ignored by default.
+   - Include it in the same commit as the lesson unless the user asks to keep it local.
 
 4. Prefer adding focused exercise code under `src/exercises/`.
    - Add or update UI wiring only when visual feedback helps learning.
@@ -37,6 +37,7 @@ Do not force a fixed UI or file pattern. The goal is to add one focused, verifia
 
 5. Preserve local project rules.
    - Do not track `docs/`.
+   - Keep understanding checks outside `docs/` so they are tracked by Git.
    - Do not commit generated `dist/`.
    - Keep SSH passphrase operations with the user; ask the user to run `git push` when needed.
 
