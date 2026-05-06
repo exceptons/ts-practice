@@ -24,27 +24,33 @@ Do not force a fixed UI or file pattern. The goal is to add one focused, verifia
    - Prefer examples that build on prior lessons.
    - Avoid mixing unrelated TypeScript concepts in one commit.
 
-3. Prefer adding focused exercise code under `src/exercises/`.
+3. After designing the learning theme and commit scope, write an understanding-check Markdown file.
+   - Prefer `docs/understanding-checks/{topic}.md`.
+   - Keep it focused on the planned lesson, with 6-12 questions.
+   - Do not include answers by default; let the learner answer first.
+   - Keep it out of the commit unless the user explicitly asks to track it. `docs/` is ignored by default.
+
+4. Prefer adding focused exercise code under `src/exercises/`.
    - Add or update UI wiring only when visual feedback helps learning.
    - Keep UI changes consistent with existing patterns.
    - Do not require every lesson to modify `main.ts` or `style.css` if a pure TypeScript exercise is clearer.
 
-4. Preserve local project rules.
+5. Preserve local project rules.
    - Do not track `docs/`.
    - Do not commit generated `dist/`.
    - Keep SSH passphrase operations with the user; ask the user to run `git push` when needed.
 
-5. Verify before commit:
+6. Verify before commit:
    - `npm run typecheck`
    - `npm run build`
    - If a dev server is relevant and running, optionally check `curl -I http://localhost:5173/`.
 
-6. Review the diff before commit:
+7. Review the diff before commit:
    - `git diff --stat`
    - `git status --short --branch`
    - Confirm only the intended learning theme changed.
 
-7. Commit one coherent learning step.
+8. Commit one coherent learning step.
    - Use a concise commit message such as `Add {topic} exercise`.
    - After commit, report the commit hash and ask the user to push when needed.
 
@@ -54,6 +60,7 @@ Do not finish an exercise as complete unless:
 
 - The code matches the current repository style.
 - The concept can be explained to the learner in a few sentences.
+- An understanding-check Markdown file has been created for the lesson, unless the user asked to skip it.
 - TypeScript checks pass.
 - Build passes.
 - The working tree is clean except for intentional uncommitted user changes.
