@@ -35,6 +35,14 @@ Check TypeScript types:
 npm run typecheck
 ```
 
+## Codex Skill
+
+This repository includes a workflow skill for adding TypeScript practice lessons:
+
+- `skills/ts-practice-lesson/SKILL.md`
+
+The skill documents the project workflow: read the current code first, keep lessons focused, verify with `typecheck` and `build`, and commit one learning theme at a time.
+
 ## Next Steps
 
 1. Add ESLint and Prettier
