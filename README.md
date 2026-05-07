@@ -1,50 +1,87 @@
 # ts-practice
 
-TypeScript learning repository for building practical, modern web development fundamentals.
+TypeScript の基礎を実践しながら学ぶための学習用リポジトリです。
 
-## Goal
+## 目的
 
-- Learn core TypeScript syntax and type system
-- Practice async code and API handling
-- Add a framework later only after the basics are stable
+- TypeScript の基本文法と型システムを学ぶ
+- 非同期処理、API レスポンス、フォーム入力、コレクション処理を型付きで練習する
+- 基礎が固まってから React / Vue などのフレームワークへ進む
 
-## Initial Stack
+## 技術スタック
 
 - TypeScript
 - Vite
 - ESLint
 - Prettier
 
-## Development
+## 開発
 
-Install dependencies first:
+依存関係をインストール:
 
 ```bash
 npm install
 ```
 
-Start the Vite dev server:
+Vite の開発サーバーを起動:
 
 ```bash
 npm run dev
 ```
 
-Check TypeScript types:
+TypeScript の型チェック:
 
 ```bash
 npm run typecheck
 ```
 
+ESLint:
+
+```bash
+npm run lint
+```
+
+Prettier の確認:
+
+```bash
+npm run format:check
+```
+
+Prettier で整形:
+
+```bash
+npm run format
+```
+
+本番ビルド:
+
+```bash
+npm run build
+```
+
+## 学習内容
+
+- 基本型、配列、オブジェクト
+- optional / union type
+- unknown と narrowing
+- Promise / async / await
+- API レスポンスとエラーハンドリング
+- FormData とバリデーション
+- map / filter / find / Record / Partial
+
+## 理解度チェック
+
+学習ごとの確認問題は `learning-checks/` に追加します。
+
 ## Codex Skill
 
-This repository includes a workflow skill for adding TypeScript practice lessons:
+このリポジトリには TypeScript 学習課題を追加するための Codex workflow skill を含めています:
 
 - `skills/ts-practice-lesson/SKILL.md`
 
-The skill documents the project workflow: read the current code first, keep lessons focused, verify with `typecheck` and `build`, and commit one learning theme at a time.
+この skill は、現在のコードを読んでから課題を設計し、1 テーマ 1 commit で検証可能な演習を追加するための運用ルールです。
 
-## Next Steps
+## 次にやること
 
-1. Add ESLint and Prettier
-2. Start with basic types, functions, and async exercises
-3. Add small API response examples with typed data
+1. API レスポンス型と fetch の練習を深める
+2. 必要に応じて React または Vue を導入する

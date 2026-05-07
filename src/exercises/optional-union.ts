@@ -63,10 +63,8 @@ export const formatLastLogin = (lastLoginAt?: string | null): string => {
   return lastLoginAt.slice(0, 10)
 }
 
-export const getMembersByStatus = (
-  members: TeamMember[],
-  status: MemberStatus,
-): TeamMember[] => members.filter((member) => member.status === status)
+export const getMembersByStatus = (members: TeamMember[], status: MemberStatus): TeamMember[] =>
+  members.filter((member) => member.status === status)
 
 export const getWebsiteLabel = (member: TeamMember): string =>
   member.profile?.websiteUrl ?? 'No website'

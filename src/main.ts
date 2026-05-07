@@ -283,9 +283,7 @@ const renderOrderModeButtons = (): string => {
     .join('')
 }
 
-const renderSignupResult = (
-  result: ValidationResult<SignupForm> | null,
-): string => {
+const renderSignupResult = (result: ValidationResult<SignupForm> | null): string => {
   if (!result) {
     return `
       <div class="loading-row">

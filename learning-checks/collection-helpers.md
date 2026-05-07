@@ -19,9 +19,7 @@
 5. 次の型は何を表していますか。
 
    ```ts
-   export type ProductUpdate = Partial<
-     Pick<Product, 'name' | 'price' | 'stock' | 'isPublished'>
-   >
+   export type ProductUpdate = Partial<Pick<Product, 'name' | 'price' | 'stock' | 'isPublished'>>
    ```
 
 6. `ProductUpdate` では `{ stock: 5 }` は許可されるのに、`{ sku: 'NEW' }` が許可されないのはなぜですか。
@@ -41,43 +39,43 @@
 
 11. `getCategoryCounts` で次の初期値が必要な理由を説明してください。
 
-   ```ts
-   {
-     book: 0,
-     tool: 0,
-     course: 0,
-   }
-   ```
+```ts
+{
+  book: 0,
+  tool: 0,
+  course: 0,
+}
+```
 
 12. 次の computed property は何をしていますか。
 
-   ```ts
-   [product.category]: counts[product.category] + 1
-   ```
+```ts
+[product.category]: counts[product.category] + 1
+```
 
 13. 次の呼び出しをしたとき、`applyProductUpdate` はどのような `Product` を返しますか。
 
-   ```ts
-   applyProductUpdate(product, {
-     stock: product.stock + 5,
-     isPublished: true,
-   })
-   ```
+```ts
+applyProductUpdate(product, {
+  stock: product.stock + 5,
+  isPublished: true,
+})
+```
 
 14. `applyProductUpdate` で spread の順番を次のようにしている理由を説明してください。
 
-   ```ts
-   {
-     ...product,
-     ...update,
-   }
-   ```
+```ts
+{
+  ...product,
+  ...update,
+}
+```
 
 15. もし spread の順番を次のように逆にした場合、何が変わりますか。
 
-   ```ts
-   {
-     ...update,
-     ...product,
-   }
-   ```
+```ts
+{
+  ...update,
+  ...product,
+}
+```

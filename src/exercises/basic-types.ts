@@ -30,8 +30,7 @@ export const practiceUsers: PracticeUser[] = [
   },
 ]
 
-export const createUserLabel = (user: PracticeUser): string =>
-  `${user.name} <${user.email}>`
+export const createUserLabel = (user: PracticeUser): string => `${user.name} <${user.email}>`
 
 export const getActiveUsers = (users: PracticeUser[]): PracticeUser[] =>
   users.filter((user) => user.isActive)

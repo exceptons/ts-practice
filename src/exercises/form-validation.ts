@@ -39,8 +39,7 @@ const getTextValue = (formData: FormData, field: string): string => {
   return typeof value === 'string' ? value : ''
 }
 
-const parseContactMethod = (value: string): ContactMethod =>
-  value === 'email' ? 'email' : 'none'
+const parseContactMethod = (value: string): ContactMethod => (value === 'email' ? 'email' : 'none')
 
 const parseAge = (value: string): number | null => {
   if (value.trim() === '') {
@@ -60,9 +59,7 @@ export const parseSignupForm = (formData: FormData): SignupForm => ({
   acceptsTerms: formData.get('acceptsTerms') === 'on',
 })
 
-export const validateSignupForm = (
-  form: SignupForm,
-): ValidationResult<SignupForm> => {
+export const validateSignupForm = (form: SignupForm): ValidationResult<SignupForm> => {
   const errors: ValidationError[] = []
   const name = form.name.trim()
   const email = form.email.trim()

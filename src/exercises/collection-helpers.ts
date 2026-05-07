@@ -9,9 +9,7 @@ export type Product = {
   isPublished: boolean
 }
 
-export type ProductUpdate = Partial<
-  Pick<Product, 'name' | 'price' | 'stock' | 'isPublished'>
->
+export type ProductUpdate = Partial<Pick<Product, 'name' | 'price' | 'stock' | 'isPublished'>>
 
 export type CategoryCounts = Record<ProductCategory, number>
 
@@ -48,10 +46,8 @@ export const getPublishedProducts = (products: Product[]): Product[] =>
 export const getProductNames = (products: Product[]): string[] =>
   products.map((product) => product.name)
 
-export const findProductBySku = (
-  products: Product[],
-  sku: string,
-): Product | undefined => products.find((product) => product.sku === sku)
+export const findProductBySku = (products: Product[], sku: string): Product | undefined =>
+  products.find((product) => product.sku === sku)
 
 export const getCategoryCounts = (products: Product[]): CategoryCounts =>
   products.reduce<CategoryCounts>(
@@ -66,10 +62,7 @@ export const getCategoryCounts = (products: Product[]): CategoryCounts =>
     },
   )
 
-export const applyProductUpdate = (
-  product: Product,
-  update: ProductUpdate,
-): Product => ({
+export const applyProductUpdate = (product: Product, update: ProductUpdate): Product => ({
   ...product,
   ...update,
 })

@@ -72,5 +72,4 @@ export const sampleApiPayloads: unknown[] = [
   null,
 ]
 
-export const parseSamplePayloads = (): ParseResult[] =>
-  sampleApiPayloads.map(parseApiUser)
+export const parseSamplePayloads = (): ParseResult[] => sampleApiPayloads.map(parseApiUser)

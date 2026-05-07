@@ -54,9 +54,7 @@ export const fetchOrders = async (): Promise<ApiResponse<Order[]>> => {
   }
 }
 
-export const fetchOrdersByMode = async (
-  mode: OrderLoadMode,
-): Promise<ApiResponse<Order[]>> => {
+export const fetchOrdersByMode = async (mode: OrderLoadMode): Promise<ApiResponse<Order[]>> => {
   await wait(300)
 
   if (mode === 'api-error') {
