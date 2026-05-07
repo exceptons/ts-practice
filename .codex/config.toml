@@ -1,0 +1,19 @@
+[features]
+codex_hooks = true
+
+[[hooks.PreToolUse]]
+matcher = "^Bash$"
+
+[[hooks.PreToolUse.hooks]]
+type = "command"
+command = 'node "$(git rev-parse --show-toplevel)/.codex/hooks/pre_tool_use_policy.mjs"'
+timeout = 10
+statusMessage = "Checking shell command"
+
+[[hooks.Stop]]
+
+[[hooks.Stop.hooks]]
+type = "command"
+command = 'node "$(git rev-parse --show-toplevel)/.codex/hooks/stop_quality_gate.mjs"'
+timeout = 180
+statusMessage = "Running project checks"

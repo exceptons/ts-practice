@@ -59,6 +59,20 @@ npm run format
 npm run build
 ```
 
+## 品質ゲート
+
+Git の `pre-push` hook では Husky により次のチェックを実行します。
+
+```bash
+npm run typecheck
+npm run build
+```
+
+Codex hooks は `.codex/config.toml` に設定しています。
+
+- Codex からの `git push` や危険な破壊的コマンドをブロックする
+- Codex のターン終了時に、関連ファイルの変更があれば `format:check` / `lint` / `typecheck` / `build` を確認する
+
 ## 学習内容
 
 - 基本型、配列、オブジェクト

@@ -1,6 +1,10 @@
 node_modules/
 dist/
-.codex
+.codex/*
+!.codex/
+!.codex/config.toml
+!.codex/hooks/
+!.codex/hooks/*.mjs
 docs/
 .DS_Store
 .env
